@@ -2,4 +2,4 @@
 
 ## License
 
-Licensen er en MIT-licens
+Licensed under the MIT license.
