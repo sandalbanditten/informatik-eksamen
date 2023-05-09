@@ -10,16 +10,17 @@
 
 // TODO: Logging of some kind
 // TODO: Add some tests
+// TODO: Better error handling
 
+use std::collections::BTreeSet;
+use std::env;
 use std::fs::File;
-use std::io::ErrorKind;
+use std::io::{self, BufReader, BufWriter, ErrorKind, Write};
 use std::path::Path;
-use std::time::Duration;
-use std::{collections::BTreeSet, env};
 
 use eframe::egui;
 
-use workout::{Set, Workout};
+use workout::Workout;
 
 mod workout;
 
@@ -30,28 +31,19 @@ fn main() -> Result<(), eframe::Error> {
         ..Default::default()
     };
 
-    let _data_file = create_or_open();
-
-    let mut app = App::default();
-
-    // Two test workouts
-    let mut test_workout = Workout::new();
-    let test_set = Set::new(Some(10), Some(5.5), None, "Lateral raises");
-    test_workout.push(test_set);
-    let test_set = Set::new(None, Some(25.0), Some(5.0), "Trail running");
-    test_workout.push(test_set);
-    app.workouts.insert(test_workout);
-
-    std::thread::sleep(Duration::from_millis(10));
-
-    let mut test_workout = Workout::new();
-    let test_set = Set::new(Some(15), Some(7.5), None, "Lateral raises");
-    test_workout.push(test_set);
-    let test_set = Set::new(None, Some(27.0), Some(6.3), "Trail running");
-    test_workout.push(test_set);
-    app.workouts.insert(test_workout);
+    // TODO: Implement App::new and data serialization
+    // Make (de)serialization methods on App
+    let data_file = create_or_open();
+    let app = App::new(data_file);
 
     eframe::run_native("rST", options, Box::new(|_| Box::new(app)))
+}
+
+fn deserialize_workouts(file: &File) -> Vec<Workout> {
+    let data_file = BufReader::new(file);
+
+    // TODO: Better error handling
+    serde_json::from_reader(data_file).expect("Error in deserializing data from data file")
 }
 
 // TODO: Conditional file depending on DOS/UNIX
@@ -78,7 +70,7 @@ fn create_or_open() -> File {
 // TODO: Put app in a seperate module
 
 /// The general state of our application
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 struct App {
     /// The workouts
     ///
@@ -86,13 +78,25 @@ struct App {
     /// only one of them will be inserted.
     /// This is a highly improbably edge case.
     workouts: BTreeSet<Workout>,
+
+    /// The data file to be read from and written to
+    file: File,
 }
 
-impl Default for App {
-    fn default() -> Self {
+impl App {
+    pub fn new(file: File) -> Self {
         Self {
-            workouts: BTreeSet::new(),
+            workouts: deserialize_workouts(&file).into_iter().collect(),
+            file,
         }
+    }
+
+    pub fn save_workouts(&mut self) -> io::Result<()> {
+        let mut writer = BufWriter::new(&self.file);
+        let json = serde_json::to_string(&self.workouts.iter().collect::<Vec<_>>())?;
+        let bytes_written = writer.write(json.as_bytes())?;
+
+        Ok(())
     }
 }
 

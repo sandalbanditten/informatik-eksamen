@@ -9,8 +9,10 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
+use serde::{Deserialize, Serialize};
+
 /// A single set in a workout struct
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Set {
     /// The number of repetitions in this workout
     reps: Option<usize>,
@@ -68,7 +70,7 @@ impl Display for Set {
 }
 
 /// A workout containing many sets
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Workout {
     /// The sets
     sets: Vec<Set>,
