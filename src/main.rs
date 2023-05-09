@@ -8,9 +8,7 @@
 
 //! A workout tracking program
 
-// TODO: Logging of some kind
 // TODO: Add some tests
-// TODO: Better error handling
 
 use std::env;
 use std::fs::File;
