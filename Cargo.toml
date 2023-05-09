@@ -10,4 +10,5 @@ authors = ["sandalbanditten <sandalbanditten@tutanota.com>", "LAHVIG <ludvigscho
 egui = "0.21"
 eframe = "0.21"
 env_logger = "0.10"
-serde = "1.0.162"
+serde = "1"
+serde_json = "1"
