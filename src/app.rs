@@ -57,6 +57,8 @@ impl eframe::App for App {
 
                 // TODO: Some local buffer for saved workouts
                 // than have not yet been written to the file
+                // Perhaps a separate save button for the workout currently
+                // being edited and one for all added workouts
                 if ui.button("Save workouts").clicked() {
                     // TODO: Handle error
                     let bytes_written = self.save_workouts().unwrap();
