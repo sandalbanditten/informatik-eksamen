@@ -14,7 +14,6 @@ use eframe::egui;
 mod workout;
 
 fn main() -> Result<(), eframe::Error> {
-      
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
     let options = eframe::NativeOptions {
         initial_window_size: Some(egui::vec2(360.0, 800.0)),
@@ -51,7 +50,9 @@ impl eframe::App for App {
 
             // Workouts
             ui.heading("Workouts:");
-            for (i, workout) in self.workouts.iter().enumerate() {
+            // Iterator is reversed to show more recent workouts
+            // (with bigger timestamps) before earlier workouts
+            for (i, workout) in self.workouts.iter().rev().enumerate() {
                 ui.label(format!("Workout {i}:"));
                 ui.label(format!("  Reps: {}", workout.reps()));
                 ui.label(format!(

@@ -47,8 +47,6 @@ impl Default for Workout {
 
 impl Ord for Workout {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        // This is reversed because we want bigger timestamps to be "lower value"
-        // in the BTreeSet
-        other.timestamp.cmp(&self.timestamp)
+        self.timestamp.cmp(&other.timestamp)
     }
 }
