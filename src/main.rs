@@ -8,19 +8,15 @@ fn main() -> Result<(), eframe::Error> {
         initial_window_size: Some(egui::vec2(320.0, 240.0)),
         ..Default::default()
     };
-    eframe::run_native(
-        "My egui App",
-        options,
-        Box::new(|_cc| Box::<MyApp>::default()),
-    )
+    eframe::run_native("rST", options, Box::new(|_cc| Box::<App>::default()))
 }
 
-struct MyApp {
+struct App {
     name: String,
     age: u32,
 }
 
-impl Default for MyApp {
+impl Default for App {
     fn default() -> Self {
         Self {
             name: "Arthur".to_owned(),
@@ -29,10 +25,10 @@ impl Default for MyApp {
     }
 }
 
-impl eframe::App for MyApp {
+impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.heading("My egui Application");
+            ui.heading("rST");
             ui.horizontal(|ui| {
                 let name_label = ui.label("Your name: ");
                 ui.text_edit_singleline(&mut self.name)
