@@ -9,6 +9,7 @@
 //! A workout tracking program
 
 // TODO: Logging of some kind
+// TODO: Add some tests
 
 use std::fs::File;
 use std::io::ErrorKind;
