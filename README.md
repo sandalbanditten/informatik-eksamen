@@ -1,6 +1,6 @@
 # rST
 
-rST is an open source something
+rST is an open source program for managing and tracking your workouts and more.
 
 ## License
 
