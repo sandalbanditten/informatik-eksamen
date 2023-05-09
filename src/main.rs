@@ -11,8 +11,6 @@ fn main() -> Result<(), eframe::Error> {
     eframe::run_native("rST", options, Box::new(|_cc| Box::<App>::default()))
 }
 
-//random text, to test git commit...
-
 struct App {
     name: String,
     age: u32,
