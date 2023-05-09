@@ -1,3 +1,9 @@
+#![warn(
+    missing_copy_implementations,
+    missing_debug_implementations,
+    missing_docs // TODO: Turn this on at some moment
+)]
+
 use std::{
     fmt::Display,
     time::{SystemTime, UNIX_EPOCH},
@@ -10,10 +16,10 @@ pub struct Set {
     reps: Option<usize>,
 
     /// The weight used in this workout, in kilograms
-    weight: Option<f64>,
+    wght: Option<f64>,
 
     /// The distance of the workout, in meters
-    distance: Option<f64>,
+    dist: Option<f64>,
 
     /// The type of workout i.e. "Running" or "Lateral raises"
     kind: String,
@@ -23,33 +29,13 @@ impl Set {
     /// Constructor
     ///
     /// Automatically inserts the unix timestamp
-    pub fn new(
-        reps: Option<usize>,
-        weight: Option<f64>,
-        distance: Option<f64>,
-        kind: &str,
-    ) -> Self {
+    pub fn new(reps: Option<usize>, wght: Option<f64>, dist: Option<f64>, kind: &str) -> Self {
         Self {
             reps,
-            weight,
-            distance,
+            wght,
+            dist,
             kind: kind.to_owned(),
         }
-    }
-
-    /// Reps getter
-    pub fn reps(&self) -> Option<usize> {
-        self.reps
-    }
-
-    /// Weight getter
-    pub fn weight(&self) -> Option<f64> {
-        self.weight
-    }
-
-    /// Distance getter
-    pub fn distance(&self) -> Option<f64> {
-        self.distance
     }
 }
 
@@ -63,14 +49,21 @@ impl Eq for Set {}
 
 impl Display for Set {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let reps = self.reps.map_or("No reps".to_owned(), |v| format!("{v}"));
-        let weight = self
-            .weight
-            .map_or("No weight".to_owned(), |v| format!("{v}"));
-        let distance = self
-            .distance
-            .map_or("No distance".to_owned(), |v| format!("{v}"));
-        f.write_str("bruh")
+        let reps = self
+            .reps
+            .map_or("No reps\n".to_owned(), |v| format!("Repetitions: {v}\n"));
+        let wght = self
+            .wght
+            .map_or("No weight\n".to_owned(), |v| format!("Weight: {v}\n"));
+        let dist = self
+            .dist
+            .map_or("No distance\n".to_owned(), |v| format!("Distance: {v}\n"));
+
+        f.write_str(&reps)?;
+        f.write_str(&wght)?;
+        f.write_str(&dist)?;
+
+        Ok(())
     }
 }
 
@@ -108,13 +101,8 @@ impl Display for Workout {
         for (i, set) in self.sets.iter().enumerate() {
             f.write_str(&format!("Set {i}:\n{set}"))?;
         }
-        f.write_str("dawg")
-    }
-}
 
-impl Default for Workout {
-    fn default() -> Self {
-        Self::new()
+        Ok(())
     }
 }
 
