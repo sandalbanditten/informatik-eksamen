@@ -8,8 +8,9 @@
 
 use std::collections::BTreeSet;
 
-use crate::workout::Workout;
 use eframe::egui;
+
+use workout::{Set, Workout};
 
 mod workout;
 
@@ -19,7 +20,11 @@ fn main() -> Result<(), eframe::Error> {
         initial_window_size: Some(egui::vec2(360.0, 800.0)),
         ..Default::default()
     };
-    let app = App::default();
+    let mut app = App::default();
+    let test_set = Set::new(Some(10), Some(5.5), None, "Lateral raises");
+    let mut test_workout = Workout::new();
+    test_workout.push(test_set);
+    app.workouts.insert(test_workout);
     eframe::run_native("rST", options, Box::new(|_| Box::new(app)))
 }
 
