@@ -121,4 +121,6 @@ impl eframe::App for App {
             });
         });
     }
+
+    // et eller andet lort
 }
