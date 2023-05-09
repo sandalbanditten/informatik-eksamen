@@ -1,12 +1,14 @@
 #![warn(
     missing_copy_implementations,
     missing_debug_implementations,
-    // missing_docs // TODO: Turn this on at some moment
+    missing_docs // TODO: Turn this on at some moment
 )]
 // hide console window on Windows in release
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::collections::BTreeSet;
+//! A workout tracking program
+
+use std::{collections::BTreeSet, time::Duration};
 
 use eframe::egui;
 
@@ -20,11 +22,26 @@ fn main() -> Result<(), eframe::Error> {
         initial_window_size: Some(egui::vec2(360.0, 800.0)),
         ..Default::default()
     };
+
     let mut app = App::default();
-    let test_set = Set::new(Some(10), Some(5.5), None, "Lateral raises");
+
+    // Two test workouts
     let mut test_workout = Workout::new();
+    let test_set = Set::new(Some(10), Some(5.5), None, "Lateral raises");
+    test_workout.push(test_set);
+    let test_set = Set::new(None, Some(25.0), Some(5.0), "Trail running");
     test_workout.push(test_set);
     app.workouts.insert(test_workout);
+
+    std::thread::sleep(Duration::from_millis(10));
+
+    let mut test_workout = Workout::new();
+    let test_set = Set::new(Some(15), Some(7.5), None, "Lateral raises");
+    test_workout.push(test_set);
+    let test_set = Set::new(None, Some(27.0), Some(6.3), "Trail running");
+    test_workout.push(test_set);
+    app.workouts.insert(test_workout);
+
     eframe::run_native("rST", options, Box::new(|_| Box::new(app)))
 }
 
@@ -58,7 +75,7 @@ impl eframe::App for App {
             // Iterator is reversed to show more recent workouts
             // (with bigger timestamps) before earlier workouts
             for (i, workout) in self.workouts.iter().rev().enumerate() {
-                ui.label(format!("Workout {i}:"));
+                ui.label(format!("Workout {}:", i + 1));
                 ui.label(format!("{}", workout));
             }
         });
