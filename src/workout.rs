@@ -92,7 +92,7 @@ impl Workout {
         }
     }
 
-    pub fn push(&mut self, set: Set) {
+    pub fn push_set(&mut self, set: Set) {
         self.sets.push(set);
     }
 }

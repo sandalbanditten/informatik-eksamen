@@ -11,6 +11,6 @@ authors = [ "sandalbanditten <sandalbanditten@tutanota.com>"
 [dependencies]
 egui = "0.21"
 eframe = "0.21"
-env_logger = "0.10"
 serde = "1"
 serde_json = "1"
+anyhow = "1"
