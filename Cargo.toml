@@ -2,7 +2,9 @@
 name = "informatik-eksamen"
 version = "0.1.0"
 edition = "2021"
-authors = ["sandalbanditten <sandalbanditten@tutanota.com>", "LAHVIG <ludvigschouhansen@gmail.com>", "mthsbttgr <mathiasbottger@gmail.com>"]
+authors = [ "sandalbanditten <sandalbanditten@tutanota.com>"
+          , "LAHVIG <ludvigschouhansen@gmail.com>"
+          , "mthsbttgr <mathiasbottger@gmail.com>" ]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
