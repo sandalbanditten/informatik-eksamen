@@ -691,6 +691,7 @@ dependencies = [
  "eframe",
  "egui",
  "env_logger",
+ "serde",
 ]
 
 [[package]]
