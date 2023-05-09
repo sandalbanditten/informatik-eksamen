@@ -685,17 +685,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "egui-test"
-version = "0.1.0"
-dependencies = [
- "eframe",
- "egui",
- "env_logger",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "egui-winit"
 version = "0.21.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1090,6 +1079,17 @@ checksum = "bd070e393353796e801d209ad339e89596eb4c8d430d18ede6a1cced8fafbd99"
 dependencies = [
  "autocfg",
  "hashbrown",
+]
+
+[[package]]
+name = "informatik-eksamen"
+version = "0.1.0"
+dependencies = [
+ "eframe",
+ "egui",
+ "env_logger",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
