@@ -26,7 +26,7 @@ fn main() -> Result<(), eframe::Error> {
 /// The general state of our application
 #[derive(Debug, Clone)]
 struct App {
-    /// A test
+    /// The workouts
     ///
     /// Note: If two workouts are made at the same millisecond timestamp
     /// only one of them will be inserted.
@@ -54,13 +54,7 @@ impl eframe::App for App {
             // (with bigger timestamps) before earlier workouts
             for (i, workout) in self.workouts.iter().rev().enumerate() {
                 ui.label(format!("Workout {i}:"));
-                ui.label(format!("  Reps: {}", workout.reps()));
-                ui.label(format!(
-                    "  Weight: {}",
-                    workout
-                        .weight()
-                        .map_or("No weight".into(), |w| format!("{w}"))
-                ));
+                ui.label(format!("{}", workout));
             }
         });
     }
