@@ -8,25 +8,25 @@ use crate::{deserialize_workouts, Workout};
 
 #[derive(Debug, Default)]
 /// struct for keeping track of popup state
-struct Popup_state {
+struct PopupState {
     add_workout: bool,
     add_exercise: bool,
-    add_set: bool
+    add_set: bool,
 }
 
-impl Popup_state {
+impl PopupState {
     /// gets mutable reference to add_workout
-    fn getMut_add_workout(&mut self) -> &mut bool {
+    fn get_mut_add_workout(&mut self) -> &mut bool {
         &mut self.add_workout
     }
 
     /// gets mutable reference to add_exercise
-    fn getMut_add_exercise(&mut self) -> &mut bool {
+    fn get_mut_add_exercise(&mut self) -> &mut bool {
         &mut self.add_exercise
     }
 
     /// gets mutable reference to add_set
-    fn getMut_add_set(&mut self) -> &mut bool {
+    fn get_mut_add_set(&mut self) -> &mut bool {
         &mut self.add_set
     }
 
@@ -60,7 +60,7 @@ pub struct App {
     file: BufWriter<File>,
 
     /// When true, opens a popup for adding workouts
-    popup_state: Popup_state
+    popup_state: PopupState,
 }
 
 impl App {
@@ -71,7 +71,7 @@ impl App {
         Ok(Self {
             workouts,
             file,
-            popup_state: Popup_state::default()
+            popup_state: PopupState::default(),
         })
     }
 
@@ -136,7 +136,7 @@ impl eframe::App for App {
 
                 if ui.button("Save workouts").clicked() {
                     // TODO: Handle error
-                    let bytes_written = self.save_workouts().unwrap();
+                    let _bytes_written = self.save_workouts().unwrap();
                 }
 
                 // TODO: UI for adding a workout
@@ -152,14 +152,13 @@ impl eframe::App for App {
             });
         });
 
-
-        if *self.popup_state.getMut_add_workout() {
+        if *self.popup_state.get_mut_add_workout() {
             egui::Window::new("Add Workout")
                 .collapsible(false)
                 .show(ctx, |ui| {
                     if ui.button("Add exercise").clicked() {
                         self.popup_state.mut_add_exercise(true);
-                    }                    
+                    }
 
                     // the save and cancel buttons at the bottom of popup:
                     ui.horizontal(|ui| {
@@ -175,60 +174,53 @@ impl eframe::App for App {
                             self.popup_state.mut_add_workout(false);
                         }
                     })
-                    
-            });  
+                });
         }
 
-        if *self.popup_state.getMut_add_exercise() {
+        if *self.popup_state.get_mut_add_exercise() {
             egui::Window::new("Add exercise")
-            .collapsible(false)
-            .show(ctx, |ui| {
-                
-                
-                if ui.button("Add set").clicked() {
-                    self.popup_state.mut_add_set(true);
-                }                    
-
-
-
-                // the save and cancel buttons at the bottom of popup:
-                ui.horizontal(|ui| {
-                    //currently does nothing but close the popup
-                    if ui.button("Save").clicked() {
-                        self.popup_state.mut_add_exercise(false);
+                .collapsible(false)
+                .show(ctx, |ui| {
+                    if ui.button("Add set").clicked() {
+                        self.popup_state.mut_add_set(true);
                     }
 
-                    ui.add_space(10.0);
+                    // the save and cancel buttons at the bottom of popup:
+                    ui.horizontal(|ui| {
+                        //currently does nothing but close the popup
+                        if ui.button("Save").clicked() {
+                            self.popup_state.mut_add_exercise(false);
+                        }
 
-                    //closes the popup
-                    if ui.button("Cancel").clicked() {
-                        self.popup_state.mut_add_exercise(false);
-                    }
-                })
-            });
+                        ui.add_space(10.0);
+
+                        //closes the popup
+                        if ui.button("Cancel").clicked() {
+                            self.popup_state.mut_add_exercise(false);
+                        }
+                    })
+                });
         }
 
-        if *self.popup_state.getMut_add_set() {
+        if *self.popup_state.get_mut_add_set() {
             egui::Window::new("Add set")
-            .collapsible(false)
-            .show(ctx, |ui| {
-                
+                .collapsible(false)
+                .show(ctx, |ui| {
+                    // the save and cancel buttons at the bottom of popup:
+                    ui.horizontal(|ui| {
+                        //currently does nothing but close the popup
+                        if ui.button("Save").clicked() {
+                            self.popup_state.mut_add_set(false);
+                        }
 
-                // the save and cancel buttons at the bottom of popup:
-                ui.horizontal(|ui| {
-                    //currently does nothing but close the popup
-                    if ui.button("Save").clicked() {
-                        self.popup_state.mut_add_set(false);
-                    }
+                        ui.add_space(10.0);
 
-                    ui.add_space(10.0);
-
-                    //closes the popup
-                    if ui.button("Cancel").clicked() {
-                        self.popup_state.mut_add_set(false);
-                    }
-                })
-            });
+                        //closes the popup
+                        if ui.button("Cancel").clicked() {
+                            self.popup_state.mut_add_set(false);
+                        }
+                    })
+                });
         }
     }
 
