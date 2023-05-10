@@ -29,7 +29,7 @@ pub struct PopupState {
     weight_num: f64,
 
     /// distance in km
-    dist_num: f64
+    dist_num: f64,
 }
 
 impl PopupState {
@@ -73,27 +73,27 @@ impl PopupState {
     pub fn add_workout_popup(&mut self, ctx: &egui::Context /*, ui: &mut egui::Ui*/) {
         if self.add_workout {
             egui::Window::new("Add Workout")
-            .collapsible(false)
-            .show(ctx, |ui| {
-                if ui.button("Add exercise").clicked() {
-                    self.add_exercise = true;
-                }
-
-                // the save and cancel buttons at the bottom of popup:
-                ui.horizontal(|ui| {
-                    //currently does nothing but close the popup
-                    if ui.button("Save").clicked() {
-                        self.add_workout = false;
+                .collapsible(false)
+                .show(ctx, |ui| {
+                    if ui.button("Add exercise").clicked() {
+                        self.add_exercise = true;
                     }
 
-                    ui.add_space(10.0);
+                    // the save and cancel buttons at the bottom of popup:
+                    ui.horizontal(|ui| {
+                        //currently does nothing but close the popup
+                        if ui.button("Save").clicked() {
+                            self.add_workout = false;
+                        }
 
-                    //closes the popup
-                    if ui.button("Cancel").clicked() {
-                        self.add_workout = false;
-                    }
+                        ui.add_space(10.0);
+
+                        //closes the popup
+                        if ui.button("Cancel").clicked() {
+                            self.add_workout = false;
+                        }
+                    });
                 });
-            });
         }
     }
 
@@ -114,6 +114,7 @@ impl PopupState {
                     ui.horizontal(|ui| {
                         //currently does nothing but close the popup
                         if ui.button("Save").clicked() {
+                            // TODO: save exercise
                             self.add_exercise = false;
                         }
 
@@ -129,13 +130,12 @@ impl PopupState {
     }
 
     /// If internal bool: add_set is true, display popup
-    pub fn add_set_popup (&mut self, ctx: &egui::Context) {
+    pub fn add_set_popup(&mut self, ctx: &egui::Context) {
         if self.add_set {
             egui::Window::new("Add set")
                 .collapsible(false)
                 .show(ctx, |ui| {
                     ui.horizontal(|ui| {
-                        
                         ui.columns(3, |cols| {
                             cols[0].checkbox(&mut self.reps, "Reps");
                             if self.reps {
@@ -145,12 +145,20 @@ impl PopupState {
                             cols[1].checkbox(&mut self.weight, "Weight");
 
                             if self.weight {
-                                cols[1].add(DragValue::new(&mut self.weight_num).speed(0.25).clamp_range(0..=500));
+                                cols[1].add(
+                                    DragValue::new(&mut self.weight_num)
+                                        .speed(0.25)
+                                        .clamp_range(0..=500),
+                                );
                             }
 
                             cols[2].checkbox(&mut self.dist, "Distance");
                             if self.dist {
-                                cols[2].add(DragValue::new(&mut self.dist_num).speed(0.1).clamp_range(0..=500));
+                                cols[2].add(
+                                    DragValue::new(&mut self.dist_num)
+                                        .speed(0.1)
+                                        .clamp_range(0..=500),
+                                );
                             }
                         });
                     });
@@ -159,6 +167,7 @@ impl PopupState {
                     ui.horizontal(|ui| {
                         //currently does nothing but close the popup
                         if ui.button("Save").clicked() {
+                            // TODO: Save add set
                             self.add_set = false;
                         }
 

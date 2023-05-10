@@ -52,7 +52,7 @@ impl App {
         let _ = self
             .file
             .get_mut()
-            .seek(std::io::SeekFrom::Start(0))
+            .rewind()
             .context(format!("Failed to set cursor to 0 on file {:?}", self.file))?;
 
         let bytes_written = self
