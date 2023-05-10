@@ -6,6 +6,46 @@ use anyhow::Context;
 
 use crate::{deserialize_workouts, Workout};
 
+#[derive(Debug, Default)]
+/// struct for keeping track of popup state
+struct Popup_state {
+    add_workout: bool,
+    add_exercise: bool,
+    add_set: bool
+}
+
+impl Popup_state {
+    /// gets mutable reference to add_workout
+    fn getMut_add_workout(&mut self) -> &mut bool {
+        &mut self.add_workout
+    }
+
+    /// gets mutable reference to add_exercise
+    fn getMut_add_exercise(&mut self) -> &mut bool {
+        &mut self.add_exercise
+    }
+
+    /// gets mutable reference to add_set
+    fn getMut_add_set(&mut self) -> &mut bool {
+        &mut self.add_set
+    }
+
+    /// Sets add_workout to the specified value
+    fn mut_add_workout(&mut self, value: bool) {
+        self.add_workout = value;
+    }
+
+    /// Sets add_exercise to the specified value
+    fn mut_add_exercise(&mut self, value: bool) {
+        self.add_exercise = value;
+    }
+
+    /// Sets add_set to the specified value
+    fn mut_add_set(&mut self, value: bool) {
+        self.add_set = value;
+    }
+}
+
 /// The general state of our application
 #[derive(Debug)]
 pub struct App {
@@ -20,9 +60,7 @@ pub struct App {
     file: BufWriter<File>,
 
     /// When true, opens a popup for adding workouts
-    add_workout_popup: bool,
-    add_exercise: bool,
-    add_set: bool
+    popup_state: Popup_state
 }
 
 impl App {
@@ -33,9 +71,7 @@ impl App {
         Ok(Self {
             workouts,
             file,
-            add_workout_popup: false,
-            add_exercise: false,
-            add_set: false
+            popup_state: Popup_state::default()
         })
     }
 
@@ -117,12 +153,13 @@ impl eframe::App for App {
         });
 
 
-        if self.add_workout_popup {
+        if *self.popup_state.getMut_add_workout() {
             egui::Window::new("Add Workout")
                 .collapsible(false)
                 .show(ctx, |ui| {
                     if ui.button("Add exercise").clicked() {
-                        self.add_exercise = true;
+                        let mut_exercise = self.popup_state.getMut_add_exercise();
+                        mut_exercise = true;
                     }                    
 
                     // the save and cancel buttons at the bottom of popup:
@@ -147,9 +184,14 @@ impl eframe::App for App {
             egui::Window::new("Add exercise")
             .collapsible(false)
             .show(ctx, |ui| {
+                
+                let exercise_title = ui.text_edit_singleline()
+                
                 if ui.button("Add set").clicked() {
                     self.add_set = true;
                 }                    
+
+
 
                 // the save and cancel buttons at the bottom of popup:
                 ui.horizontal(|ui| {
