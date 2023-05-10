@@ -32,9 +32,7 @@ fn main() -> anyhow::Result<()> {
 
     let data_file = create_or_open()?;
     let data_file = data_file;
-    let mut app = App::new(data_file)?;
-
-    app.push(Workout::new());
+    let app = App::new(data_file)?;
 
     // TODO: Why doesn't this work with anyhow?
     eframe::run_native("rST", options, Box::new(|_| Box::new(app))).expect("Error in egui");

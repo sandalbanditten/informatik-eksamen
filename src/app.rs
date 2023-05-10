@@ -47,7 +47,8 @@ impl App {
             .set_len(0)
             .context(format!("Failed to truncate {:?} to length 0", self.file))?;
 
-        self.file
+        let _ = self
+            .file
             .get_mut()
             .seek(std::io::SeekFrom::Start(0))
             .context(format!("Failed to set cursor to 0 on file {:?}", self.file))?;
