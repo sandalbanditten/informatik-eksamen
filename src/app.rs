@@ -18,6 +18,8 @@ pub struct App {
 
     /// The data file to be read from and written to
     file: BufWriter<File>,
+    
+    add_workout_popup: bool,
 }
 
 impl App {
@@ -27,7 +29,7 @@ impl App {
         dbg!(&file);
         let file = BufWriter::new(file);
         dbg!(&file);
-        Ok(Self { workouts, file })
+        Ok(Self { workouts, file, add_workout_popup: false})
     }
 
     /// Saves workouts
@@ -60,7 +62,7 @@ impl App {
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let mut style = (*ctx.style()).clone();
-
+        
         for (_text_style, font_id) in style.text_styles.iter_mut() {
             font_id.size = 20.0 // whatever size you want here
         }
@@ -76,6 +78,10 @@ impl eframe::App for App {
                 // than have not yet been written to the file
                 // Perhaps a separate save button for the workout currently
                 // being edited and one for all added workouts
+                if ui.button("Add Workout").clicked() {
+                    self.add_workout_popup = true;
+                }
+                
                 if ui.button("Save workouts").clicked() {
                     // TODO: Handle error
                     let bytes_written = self.save_workouts().unwrap();
@@ -93,6 +99,20 @@ impl eframe::App for App {
                 }
             });
         });
+
+        if self.add_workout_popup {
+            egui::Window::new("Add Workout")
+                .collapsible(false)
+                .movable(false)
+                .show(ctx, |ui| {
+
+                    ui.horizontal(|ui| {
+                        if ui.button("add set").clicked() {
+
+                        }
+                    });
+            });
+        }
     }
 
     // et eller andet lort
