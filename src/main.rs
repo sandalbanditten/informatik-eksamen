@@ -68,12 +68,7 @@ fn create_or_open() -> anyhow::Result<File> {
     let path = format!("{home}/.rst");
     let path = Path::new(&path);
 
-    match OpenOptions::new()
-        .write(true)
-        .append(false)
-        .read(true)
-        .open(path)
-    {
+    match OpenOptions::new().write(true).read(true).open(path) {
         Ok(file) => Ok(file),
         Err(err) if err.kind() == ErrorKind::NotFound => File::create(path).context(format!(
             "Unable to create data file: {:?}\nNo user data read",

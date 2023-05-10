@@ -18,7 +18,7 @@ pub struct App {
 
     /// The data file to be read from and written to
     file: BufWriter<File>,
-    
+
     add_workout_popup: bool,
 }
 
@@ -26,17 +26,18 @@ impl App {
     /// Constructer, taking the file that will be read from and written to
     pub fn new(file: File) -> anyhow::Result<Self> {
         let workouts = deserialize_workouts(&file)?.into_iter().collect();
-        dbg!(&file);
         let file = BufWriter::new(file);
-        dbg!(&file);
-        Ok(Self { workouts, file, add_workout_popup: false})
+        Ok(Self {
+            workouts,
+            file,
+            add_workout_popup: false,
+        })
     }
 
     /// Saves workouts
     ///
     /// Returns the number of bytes read
     pub fn save_workouts(&mut self) -> anyhow::Result<usize> {
-        dbg!(&self.file);
         let json = serde_json::to_string_pretty(&self.workouts.iter().collect::<Vec<_>>())
             .context("Failed to serialize workout data")?;
 
@@ -49,8 +50,6 @@ impl App {
             .flush()
             .context(format!("Failed to flush writer {:?}", self.file))?;
 
-        // println!("Wrote {bytes_written} bytes to {:?}", dbg!(self.file));
-
         Ok(bytes_written)
     }
 
@@ -62,7 +61,7 @@ impl App {
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let mut style = (*ctx.style()).clone();
-        
+
         for (_text_style, font_id) in style.text_styles.iter_mut() {
             font_id.size = 20.0 // whatever size you want here
         }
@@ -81,7 +80,7 @@ impl eframe::App for App {
                 if ui.button("Add Workout").clicked() {
                     self.add_workout_popup = true;
                 }
-                
+
                 if ui.button("Save workouts").clicked() {
                     // TODO: Handle error
                     let bytes_written = self.save_workouts().unwrap();
@@ -105,13 +104,8 @@ impl eframe::App for App {
                 .collapsible(false)
                 .movable(false)
                 .show(ctx, |ui| {
-
-                    ui.horizontal(|ui| {
-                        if ui.button("add set").clicked() {
-
-                        }
-                    });
-            });
+                    ui.horizontal(|ui| if ui.button("add set").clicked() {});
+                });
         }
     }
 
