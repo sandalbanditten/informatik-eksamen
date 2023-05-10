@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 use std::fs::File;
-use std::io::{BufWriter, Write};
+use std::io::{BufWriter, Seek, Write};
 
 use anyhow::Context;
 
@@ -40,6 +40,17 @@ impl App {
     pub fn save_workouts(&mut self) -> anyhow::Result<usize> {
         let json = serde_json::to_string_pretty(&self.workouts.iter().collect::<Vec<_>>())
             .context("Failed to serialize workout data")?;
+
+        // Truncate the file to zero, before rewriting data
+        self.file
+            .get_mut()
+            .set_len(0)
+            .context(format!("Failed to truncate {:?} to length 0", self.file))?;
+
+        self.file
+            .get_mut()
+            .seek(std::io::SeekFrom::Start(0))
+            .context(format!("Failed to set cursor to 0 on file {:?}", self.file))?;
 
         let bytes_written = self
             .file
