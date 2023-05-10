@@ -30,6 +30,8 @@ fn main() -> anyhow::Result<()> {
         ..Default::default()
     };
 
+    // TODO: Instead of just crashing, maybe write something to the user explaing what happened and why?
+    // And *then* crash
     let data_file = create_or_open()?;
     let data_file = data_file;
     let app = App::new(data_file)?;

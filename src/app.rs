@@ -77,7 +77,7 @@ impl App {
 
     /// Saves workouts
     ///
-    /// Returns the number of bytes read
+    /// Returns the number of bytes written
     pub fn save_workouts(&mut self) -> anyhow::Result<usize> {
         let json = serde_json::to_string_pretty(&self.workouts.iter().collect::<Vec<_>>())
             .context("Failed to serialize workout data")?;
