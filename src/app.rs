@@ -131,7 +131,7 @@ impl eframe::App for App {
                 // Perhaps a separate save button for the workout currently
                 // being edited and one for all added workouts
                 if ui.button("Add Workout").clicked() {
-                    self.add_workout_popup = true;
+                    self.popup_state.mut_add_workout(true);
                 }
 
                 if ui.button("Save workouts").clicked() {
@@ -158,37 +158,35 @@ impl eframe::App for App {
                 .collapsible(false)
                 .show(ctx, |ui| {
                     if ui.button("Add exercise").clicked() {
-                        let mut_exercise = self.popup_state.getMut_add_exercise();
-                        mut_exercise = true;
+                        self.popup_state.mut_add_exercise(true);
                     }                    
 
                     // the save and cancel buttons at the bottom of popup:
                     ui.horizontal(|ui| {
                         //currently does nothing but close the popup
                         if ui.button("Save").clicked() {
-                            self.add_workout_popup = false;
+                            self.popup_state.mut_add_workout(false);
                         }
 
                         ui.add_space(10.0);
 
                         //closes the popup
                         if ui.button("Cancel").clicked() {
-                            self.add_workout_popup = false;
+                            self.popup_state.mut_add_workout(false);
                         }
                     })
                     
             });  
         }
 
-        if self.add_exercise {
+        if *self.popup_state.getMut_add_exercise() {
             egui::Window::new("Add exercise")
             .collapsible(false)
             .show(ctx, |ui| {
                 
-                let exercise_title = ui.text_edit_singleline()
                 
                 if ui.button("Add set").clicked() {
-                    self.add_set = true;
+                    self.popup_state.mut_add_set(true);
                 }                    
 
 
@@ -197,20 +195,20 @@ impl eframe::App for App {
                 ui.horizontal(|ui| {
                     //currently does nothing but close the popup
                     if ui.button("Save").clicked() {
-                        self.add_exercise = false;
+                        self.popup_state.mut_add_exercise(false);
                     }
 
                     ui.add_space(10.0);
 
                     //closes the popup
                     if ui.button("Cancel").clicked() {
-                        self.add_exercise = false;
+                        self.popup_state.mut_add_exercise(false);
                     }
                 })
             });
         }
 
-        if self.add_set {
+        if *self.popup_state.getMut_add_set() {
             egui::Window::new("Add set")
             .collapsible(false)
             .show(ctx, |ui| {
@@ -220,14 +218,14 @@ impl eframe::App for App {
                 ui.horizontal(|ui| {
                     //currently does nothing but close the popup
                     if ui.button("Save").clicked() {
-                        self.add_set = false;
+                        self.popup_state.mut_add_set(false);
                     }
 
                     ui.add_space(10.0);
 
                     //closes the popup
                     if ui.button("Cancel").clicked() {
-                        self.add_set = false;
+                        self.popup_state.mut_add_set(false);
                     }
                 })
             });
