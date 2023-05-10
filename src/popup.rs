@@ -1,3 +1,5 @@
+use egui::DragValue;
+
 #[derive(Debug, Default)]
 /// struct for keeping track of popup state
 pub struct PopupState {
@@ -19,6 +21,15 @@ pub struct PopupState {
     weight: bool,
     /// bool for if set should have distance
     dist: bool,
+
+    /// number of reps
+    reps_num: usize,
+
+    /// amount of weight in kg
+    weight_num: f64,
+
+    /// distance in km
+    dist_num: f64
 }
 
 impl PopupState {
@@ -123,6 +134,27 @@ impl PopupState {
             egui::Window::new("Add set")
                 .collapsible(false)
                 .show(ctx, |ui| {
+                    ui.horizontal(|ui| {
+                        
+                        ui.columns(3, |cols| {
+                            cols[0].checkbox(&mut self.reps, "Reps");
+                            if self.reps {
+                                cols[0].add(DragValue::new(&mut self.reps_num));
+                            }
+
+                            cols[1].checkbox(&mut self.weight, "Weight");
+
+                            if self.weight {
+                                cols[1].add(DragValue::new(&mut self.weight_num).speed(0.25).clamp_range(0..=500));
+                            }
+
+                            cols[2].checkbox(&mut self.dist, "Distance");
+                            if self.dist {
+                                cols[2].add(DragValue::new(&mut self.dist_num).speed(0.1).clamp_range(0..=500));
+                            }
+                        });
+                    });
+
                     // the save and cancel buttons at the bottom of popup:
                     ui.horizontal(|ui| {
                         //currently does nothing but close the popup
