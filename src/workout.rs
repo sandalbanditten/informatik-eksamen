@@ -1,7 +1,7 @@
 #![warn(
     missing_copy_implementations,
     missing_debug_implementations,
-    missing_docs // TODO: Turn this on at some moment
+    missing_docs
 )]
 
 use std::{
@@ -62,7 +62,7 @@ impl Display for Set {
 }
 
 /// A workout containing multiple Exercises
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Workout {
     /// The sets
     exercises: Vec<Exercise>,
@@ -101,6 +101,12 @@ impl Display for Workout {
 }
 
 impl Eq for Workout {}
+
+impl PartialOrd for Workout {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.timestamp.partial_cmp(&other.timestamp)
+    }
+}
 
 impl Ord for Workout {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
