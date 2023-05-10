@@ -17,26 +17,43 @@ pub struct App {
     workouts: BTreeSet<Workout>,
 
     /// The data file to be read from and written to
-    file: File,
+    file: BufWriter<File>,
 }
 
 impl App {
+    /// Constructer, taking the file that will be read from and written to
     pub fn new(file: File) -> anyhow::Result<Self> {
         let workouts = deserialize_workouts(&file)?.into_iter().collect();
+        dbg!(&file);
+        let file = BufWriter::new(file);
+        dbg!(&file);
         Ok(Self { workouts, file })
     }
 
+    /// Saves workouts
+    ///
+    /// Returns the number of bytes read
     pub fn save_workouts(&mut self) -> anyhow::Result<usize> {
-        let mut writer = BufWriter::new(&self.file);
-
-        let json = serde_json::to_string(&self.workouts.iter().collect::<Vec<_>>())
+        dbg!(&self.file);
+        let json = serde_json::to_string_pretty(&self.workouts.iter().collect::<Vec<_>>())
             .context("Failed to serialize workout data")?;
 
-        let bytes_written = writer
+        let bytes_written = self
+            .file
             .write(json.as_bytes())
             .context("Failed to write serialized workout data to file")?;
 
+        self.file
+            .flush()
+            .context(format!("Failed to flush writer {:?}", self.file))?;
+
+        // println!("Wrote {bytes_written} bytes to {:?}", dbg!(self.file));
+
         Ok(bytes_written)
+    }
+
+    pub fn push(&mut self, workout: Workout) {
+        self.workouts.insert(workout);
     }
 }
 
@@ -51,7 +68,7 @@ impl eframe::App for App {
         ctx.set_style(style);
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.vertical_centered(|ui| {
+            ui.vertical(|ui| {
                 ui.heading("rST");
                 ui.separator();
 

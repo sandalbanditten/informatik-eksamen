@@ -31,7 +31,10 @@ fn main() -> anyhow::Result<()> {
     };
 
     let data_file = create_or_open()?;
-    let app = App::new(data_file)?;
+    let data_file = data_file;
+    let mut app = App::new(data_file)?;
+
+    app.push(Workout::new());
 
     // TODO: Why doesn't this work with anyhow?
     eframe::run_native("rST", options, Box::new(|_| Box::new(app))).expect("Error in egui");
@@ -58,12 +61,19 @@ fn deserialize_workouts(file: &File) -> anyhow::Result<Vec<Workout>> {
 // Currently it just works on unix
 #[cfg(unix)]
 fn create_or_open() -> anyhow::Result<File> {
+    use std::fs::OpenOptions;
+
     let home =
         env::var("HOME").context("$HOME environment variable not set\nNo storage file created")?;
     let path = format!("{home}/.rst");
     let path = Path::new(&path);
 
-    match File::open(path) {
+    match OpenOptions::new()
+        .write(true)
+        .append(false)
+        .read(true)
+        .open(path)
+    {
         Ok(file) => Ok(file),
         Err(err) if err.kind() == ErrorKind::NotFound => File::create(path).context(format!(
             "Unable to create data file: {:?}\nNo user data read",

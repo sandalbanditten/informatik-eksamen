@@ -51,6 +51,7 @@ impl Eq for Set {}
 
 impl Display for Set {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let kind = format!("{}\n", self.kind);
         let reps = self
             .reps
             .map_or("No reps\n".to_owned(), |v| format!("Repetitions: {v}\n"));
@@ -61,6 +62,7 @@ impl Display for Set {
             .dist
             .map_or("No distance\n".to_owned(), |v| format!("Distance: {v}\n"));
 
+        f.write_str(&kind)?;
         f.write_str(&reps)?;
         f.write_str(&wght)?;
         f.write_str(&dist)?;
@@ -101,7 +103,7 @@ impl Display for Workout {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str("Sets:\n")?;
         for (i, set) in self.sets.iter().enumerate() {
-            f.write_str(&format!("Set {i}:\n{set}"))?;
+            f.write_str(&format!("Set {}:\n{set}", i + 1))?;
         }
 
         Ok(())
