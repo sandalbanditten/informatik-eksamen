@@ -25,7 +25,7 @@ pub struct App {
 impl App {
     /// Constructer, taking the file that will be read from and written to
     pub fn new(file: File) -> anyhow::Result<Self> {
-        let workouts = deserialize_workouts(&file)?.into_iter().collect();
+        let workouts = deserialize_workouts(&file).into_iter().collect();
         let file = BufWriter::new(file);
         Ok(Self {
             workouts,

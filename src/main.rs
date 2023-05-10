@@ -40,19 +40,19 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn deserialize_workouts(file: &File) -> anyhow::Result<Vec<Workout>> {
+fn deserialize_workouts(file: &File) -> Vec<Workout> {
     let data_file = BufReader::new(file);
 
-    // TODO: Better error handling
-    let vec = match serde_json::from_reader(data_file)
-        .context("Error in deserializing data from data file")
-    {
+    let vec = match serde_json::from_reader(data_file) {
         // If there is an error reading the data, just use no data
         Ok(vec) => vec,
-        Err(_) => Vec::new(),
+        Err(_) => {
+            eprintln!("Error deserializing saved data, using empty save");
+            Vec::new()
+        }
     };
 
-    Ok(vec)
+    vec
 }
 
 // TODO: Conditional file depending on DOS/UNIX
