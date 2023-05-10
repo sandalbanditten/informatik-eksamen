@@ -29,11 +29,7 @@ impl Set {
     ///
     /// Automatically inserts the unix timestamp
     pub fn new(reps: Option<usize>, wght: Option<f64>, dist: Option<f64>) -> Self {
-        Self {
-            reps,
-            wght,
-            dist,
-        }
+        Self { reps, wght, dist }
     }
 }
 
@@ -123,13 +119,12 @@ pub struct Exercise {
 }
 
 impl Exercise {
-    
     /// Generates a new exercise.
     /// Takes a &str that defines the name
-    fn new(kind: &str) -> Self{
+    fn new(kind: &str) -> Self {
         Self {
             kind: kind.to_owned(),
-            sets: Vec::new()
+            sets: Vec::new(),
         }
     }
 

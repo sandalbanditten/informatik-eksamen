@@ -22,6 +22,7 @@ use app::App;
 use workout::Workout;
 
 mod app;
+mod popup;
 mod workout;
 
 fn main() -> anyhow::Result<()> {

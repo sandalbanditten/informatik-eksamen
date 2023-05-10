@@ -4,47 +4,8 @@ use std::io::{BufWriter, Seek, Write};
 
 use anyhow::Context;
 
+use crate::popup::PopupState;
 use crate::{deserialize_workouts, Workout};
-
-#[derive(Debug, Default)]
-/// struct for keeping track of popup state
-struct PopupState {
-    add_workout: bool,
-    add_exercise: bool,
-    add_set: bool,
-}
-
-impl PopupState {
-    /// gets mutable reference to add_workout
-    fn get_mut_add_workout(&mut self) -> &mut bool {
-        &mut self.add_workout
-    }
-
-    /// gets mutable reference to add_exercise
-    fn get_mut_add_exercise(&mut self) -> &mut bool {
-        &mut self.add_exercise
-    }
-
-    /// gets mutable reference to add_set
-    fn get_mut_add_set(&mut self) -> &mut bool {
-        &mut self.add_set
-    }
-
-    /// Sets add_workout to the specified value
-    fn mut_add_workout(&mut self, value: bool) {
-        self.add_workout = value;
-    }
-
-    /// Sets add_exercise to the specified value
-    fn mut_add_exercise(&mut self, value: bool) {
-        self.add_exercise = value;
-    }
-
-    /// Sets add_set to the specified value
-    fn mut_add_set(&mut self, value: bool) {
-        self.add_set = value;
-    }
-}
 
 /// The general state of our application
 #[derive(Debug)]
@@ -152,76 +113,9 @@ impl eframe::App for App {
             });
         });
 
-        if *self.popup_state.get_mut_add_workout() {
-            egui::Window::new("Add Workout")
-                .collapsible(false)
-                .show(ctx, |ui| {
-                    if ui.button("Add exercise").clicked() {
-                        self.popup_state.mut_add_exercise(true);
-                    }
-
-                    // the save and cancel buttons at the bottom of popup:
-                    ui.horizontal(|ui| {
-                        //currently does nothing but close the popup
-                        if ui.button("Save").clicked() {
-                            self.popup_state.mut_add_workout(false);
-                        }
-
-                        ui.add_space(10.0);
-
-                        //closes the popup
-                        if ui.button("Cancel").clicked() {
-                            self.popup_state.mut_add_workout(false);
-                        }
-                    })
-                });
-        }
-
-        if *self.popup_state.get_mut_add_exercise() {
-            egui::Window::new("Add exercise")
-                .collapsible(false)
-                .show(ctx, |ui| {
-                    if ui.button("Add set").clicked() {
-                        self.popup_state.mut_add_set(true);
-                    }
-
-                    // the save and cancel buttons at the bottom of popup:
-                    ui.horizontal(|ui| {
-                        //currently does nothing but close the popup
-                        if ui.button("Save").clicked() {
-                            self.popup_state.mut_add_exercise(false);
-                        }
-
-                        ui.add_space(10.0);
-
-                        //closes the popup
-                        if ui.button("Cancel").clicked() {
-                            self.popup_state.mut_add_exercise(false);
-                        }
-                    })
-                });
-        }
-
-        if *self.popup_state.get_mut_add_set() {
-            egui::Window::new("Add set")
-                .collapsible(false)
-                .show(ctx, |ui| {
-                    // the save and cancel buttons at the bottom of popup:
-                    ui.horizontal(|ui| {
-                        //currently does nothing but close the popup
-                        if ui.button("Save").clicked() {
-                            self.popup_state.mut_add_set(false);
-                        }
-
-                        ui.add_space(10.0);
-
-                        //closes the popup
-                        if ui.button("Cancel").clicked() {
-                            self.popup_state.mut_add_set(false);
-                        }
-                    })
-                });
-        }
+        self.popup_state.add_workout_popup(ctx);
+        self.popup_state.add_exercise_popup(ctx);
+        self.popup_state.add_set_popup(ctx);
     }
 
     // et eller andet lort
