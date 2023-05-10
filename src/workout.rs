@@ -115,10 +115,10 @@ impl Ord for Workout {
 // an exercise in a workort
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Exercise {
-    /// The exercise you were doing:
+    /// The kind of exercise
     kind: String,
 
-    /// The amount of sets you did of that exercise
+    /// The sets of the exercise
     sets: Vec<Set>,
 }
 

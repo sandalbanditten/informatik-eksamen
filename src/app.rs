@@ -19,7 +19,10 @@ pub struct App {
     /// The data file to be read from and written to
     file: BufWriter<File>,
 
+    /// When true, opens a popup for adding workouts
     add_workout_popup: bool,
+    add_exercise: bool,
+    add_set: bool
 }
 
 impl App {
@@ -31,6 +34,8 @@ impl App {
             workouts,
             file,
             add_workout_popup: false,
+            add_exercise: false,
+            add_set: false
         })
     }
 
@@ -111,13 +116,79 @@ impl eframe::App for App {
             });
         });
 
+
         if self.add_workout_popup {
             egui::Window::new("Add Workout")
                 .collapsible(false)
-                .movable(false)
                 .show(ctx, |ui| {
-                    ui.horizontal(|ui| if ui.button("add set").clicked() {});
-                });
+                    if ui.button("Add exercise").clicked() {
+                        self.add_exercise = true;
+                    }                    
+
+                    // the save and cancel buttons at the bottom of popup:
+                    ui.horizontal(|ui| {
+                        //currently does nothing but close the popup
+                        if ui.button("Save").clicked() {
+                            self.add_workout_popup = false;
+                        }
+
+                        ui.add_space(10.0);
+
+                        //closes the popup
+                        if ui.button("Cancel").clicked() {
+                            self.add_workout_popup = false;
+                        }
+                    })
+                    
+            });  
+        }
+
+        if self.add_exercise {
+            egui::Window::new("Add exercise")
+            .collapsible(false)
+            .show(ctx, |ui| {
+                if ui.button("Add set").clicked() {
+                    self.add_set = true;
+                }                    
+
+                // the save and cancel buttons at the bottom of popup:
+                ui.horizontal(|ui| {
+                    //currently does nothing but close the popup
+                    if ui.button("Save").clicked() {
+                        self.add_exercise = false;
+                    }
+
+                    ui.add_space(10.0);
+
+                    //closes the popup
+                    if ui.button("Cancel").clicked() {
+                        self.add_exercise = false;
+                    }
+                })
+            });
+        }
+
+        if self.add_set {
+            egui::Window::new("Add set")
+            .collapsible(false)
+            .show(ctx, |ui| {
+                
+
+                // the save and cancel buttons at the bottom of popup:
+                ui.horizontal(|ui| {
+                    //currently does nothing but close the popup
+                    if ui.button("Save").clicked() {
+                        self.add_set = false;
+                    }
+
+                    ui.add_space(10.0);
+
+                    //closes the popup
+                    if ui.button("Cancel").clicked() {
+                        self.add_set = false;
+                    }
+                })
+            });
         }
     }
 
